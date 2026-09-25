@@ -7,6 +7,11 @@ class TestStorage(dict):
 
 
 class BddTestTest(BddTest):
+    def scenario_true(self, given, when, then):
+        given(a=False, fn=lambda x:x)
+        when.fn(given.a)
+        then.it.should.be.false
+
     def scenario_add_two_numbers(self, given, when, then):
         given(add=lambda x, y: x + y,
               a=1,

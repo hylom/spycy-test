@@ -1,3 +1,4 @@
+from typing import Any
 import unittest
 import os
 import sys
@@ -124,7 +125,6 @@ class BddTestResult():
         (t, v, trace) = err
         formatted_err = v
         self.failures.append((test, formatted_err))
-        print("FAIL")
 
 
 class Fixture(object):
@@ -355,8 +355,9 @@ class It():
     def _check_exception(self):
         if self._exception:
             raise self._exception
-       
+
     def __getattr__(self, name):
+        debug(f"attr: {name}")
         if hasattr(self._value, name):
             v = getattr(self._value, name)
             self._parent._spec.append(".%s" % name)
@@ -364,6 +365,7 @@ class It():
         return self._chain_or_execute(name)
 
     def _chain_or_execute(self, name):
+        debug(f"chain: {name}")
         name = name.strip("_")
         if not name in self.CHAINS:
             self._check_exception()
@@ -454,7 +456,7 @@ class It():
                                              self._get_spec())
         return self
 
-    def property(self, value):
+    def has_property(self, value):
         self._check_exception()
         self._parent._spec.append(" property")
         self._parent._spec.append(" %s" % _to_str(value))
@@ -506,6 +508,7 @@ class It():
         self._exception = None
         return self
 
+    @property
     def none(self):
         self._check_exception()
         if hasattr(self, "_target"):
@@ -516,7 +519,9 @@ class It():
         self._parent._fixture.assertIsNone(target, self._get_spec())
         return self
 
+    @property
     def true(self):
+        debug("true")
         self._check_exception()
         if hasattr(self, "_target"):
             target = self._target
@@ -526,7 +531,9 @@ class It():
         self._parent._fixture.assertTrue(target, self._get_spec())
         return self
 
+    @property
     def false(self):
+        debug("false")
         self._check_exception()
         if hasattr(self, "_target"):
             target = self._target
