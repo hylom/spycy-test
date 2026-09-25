@@ -1,5 +1,10 @@
 import unittest
-from spicy_bdd import BddTest
+import sys
+import os
+
+sys.path.append(os.path.abspath("src"))
+
+from spycy_test import BddTest
 
 class TestStorage(dict):
     def append(self, key, value):
